@@ -55,9 +55,14 @@ d_nredp <-
   select(-yield_buac, -rep)  |> 
   distinct() |> 
   pivot_wider(names_from = trt, values_from = nrate_lbac) |> 
-  mutate(red_pct = (typ - red)/typ * 100)
+  mutate(red_pct = (typ - red)/typ * 100,
+         red_abs = typ - red)
 
-summary(d_nredp$red_pct)
+red_pct <- round(mean(d_nredp$red_pct), 0)
+red_abs_min <- round(min(d_nredp$red_abs), 0)
+red_abs_max <- round(max(d_nredp$red_abs), 0)
+abs_min <- round(min(d_nredp$typ), 0)
+abs_max <- round(max(d_nredp$typ), 0)
 
 #--get order I want them in
 my_order <- 
@@ -113,8 +118,9 @@ fig_dat %>%
   labs(x = "Farmer",
        y = "Nitrogen\napplied\n(lb/ac)",
        fill = NULL,
-       title = "Typical N rates ranged from 108-264 lb N/ac",
-       subtitle = "On average, rates were reduced by 30% (20-74 lb N/ac lower than typical rate)") + 
+       title = paste0("Typical N rates ranged from ", abs_min, "-", abs_max, " lb N/ac"),
+       subtitle = paste0("On average, rates were reduced by ", red_pct, "% (", red_abs_min, "-",
+                         red_abs_max, " lb N/ac lower than typical rate)")) + 
   my_nitapp_theme 
 
 ggsave("figs/fig02_nrates.jpg", width = 8, height = 5.5)

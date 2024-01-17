@@ -1,7 +1,7 @@
 trial_key,first_name,last_name,city,state,zipcode,trial_label,latitude,longitude
 abel_23,fred,abels,holland,ia,50642,Abels,42.3989349,-92.8001926
-amun1_23,alec&rachel,amundson,osage,ia,50461,Amundson,43.2841235,-92.8112231
-amun2_23,alec&rachel,amundson,osage,ia,50461,Amundson,43.2841235,-92.8112231
+amun1_23,alec&rachel,amundson,osage,ia,50461,Amundson1,43.2841235,-92.8112231
+amun2_23,alec&rachel,amundson,osage,ia,50461,Amundson2,43.2841235,-92.8112231
 ande_23,nathan,anderson,aurelia,ia,51005,Anderson,42.7125676,-95.4366206
 auke_23,terry,aukes,larchwood,ia,51241,Aukes,43.453875,-96.434065
 bake1_23,jon,bakehouse,hastings,ia,51540,Bakehouse1,41.0227224,-95.4990369
@@ -9,13 +9,14 @@ bake2_23,jon,bakehouse,hastings,ia,51540,Bakehouse2,41.0227224,-95.4990369
 benn_23,sam,bennett,galva,ia,51020,Bennett,42.5069289,-95.4172221
 borc_23,vaughn,borchardt,fenton,ia,50539,Borchardt,43.2188823,-94.4274248
 boye_23,jack,boyer,reinbeck,ia,50669,Boyer,42.3242883,-92.5993534
+brag_23,joe,bragger,independence,wi,54747,Bragger,44.3569071,-91.4204347
 deng_23,sean,dengler,urbandale,ia,50322,Dengler,41.6274511,-93.7380243
 harv_23,robert,harvey,redfield,ia,50233,Harvey,41.5894322,-94.19607
 hiem_23,josh,hiemstra,brandon,wi,53919,Hiemstra,43.7352624,-88.7812212
 holli_23,jd,hollingsworth,packwood,ia,52580,Hollingsworth,41.1328058,-92.0847853
 krue_23,keaton,krueger,ogden,ia,50212,Krueger,42.0391745,-94.0309959
-mcca1_23,ross,mccaw,marengo,ia,52301,Mccaw,41.8001041,-92.069382
-mcca2_23,ross,mccaw,marengo,ia,52301,Mccaw,41.8001041,-92.069382
+mcca1_23,ross,mccaw,marengo,ia,52301,McCaw1,41.8001041,-92.069382
+mcca2_23,ross,mccaw,marengo,ia,52301,McCaw2,41.8001041,-92.069382
 pete_23,mark,peterson,stanton,ia,51573,Peterson,40.9815742,-95.1041781
 prev_23,kevin,prevo,bloomfield,ia,52537,Prevo,40.7510398,-92.4143872
 vanh_23,john,van horn,glidden,ia,51443,Van Horn,42.0569297,-94.72887

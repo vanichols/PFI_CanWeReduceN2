@@ -1,5 +1,6 @@
 #--do stats on yields
 #--did mixed and fixed effect for rep (block), results are the same
+#--created 1/17/2024
 
 library(tidyverse)
 library(lubridate)
@@ -31,7 +32,7 @@ tk <-
 
 
 #--test individual
-tst <- y |> filter(trial_key== "dool_22")
+tst <- y |> filter(trial_key== "abel_23")
 
 
 # 1. fixed effect stats -------------------------------------------------------------------
@@ -154,7 +155,7 @@ res_comp <-
   ) |>
   mutate(dif = ifelse(sig_fixed == sig_rand, "n", "y"))
 
-#--sifnificances are the same
+#--sifnificances are the same except for abel, random makes them not sig
 res_comp %>% 
   filter(dif == "y")
 

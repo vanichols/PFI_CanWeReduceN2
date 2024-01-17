@@ -33,13 +33,21 @@ for (i in 1:length(my_files)) {
 }
 library(tm)
 
+#--fix some things
 md <- 
   dat %>% 
   mutate_if(is.character, str_to_lower) %>% 
   mutate(trial_label = str_to_title(last_name),
          last_name = removeNumbers(last_name)) %>% 
-  rename(city = town)
-
+  rename(city = town) %>% 
+  #--fix some issues
+  mutate(trial_label = case_when(
+      trial_key == "amun1_23" ~ "Amundson1",
+      trial_key == "amun2_23" ~ "Amundson2",
+      trial_key == "mcca1_23" ~ "McCaw1",
+      trial_key == "mcca2_23" ~ "McCaw2",
+      TRUE ~ trial_label
+    ))
 
 # add lat and lon ---------------------------------------------------------
 

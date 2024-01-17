@@ -33,18 +33,6 @@ w <-
   arrange(city) %>% 
   full_join(tk, by = "city")
 
-#--boyer should be working
-w %>% 
-  filter(trial_label == "Boyer") %>% 
-  group_by(trial_label, city, mm, name) |> 
-  summarise(value = mean(value, na.rm = T)) |> 
-  pivot_wider(names_from = name, values_from = value) |> 
-  mutate(dev_t = t_23 - t_lt,
-         date = paste("2023", mm, "01", sep = "/"),
-         date_mm = as_date(date)) %>% 
-  ggplot(aes(date_mm, dev_t)) + 
-  geom_point()
-
 t <- 
   w %>% 
   filter(grepl("temperature", wea_type))
@@ -61,31 +49,34 @@ fig_cp <-
 
 fig_cp
 
-#--add an arrow to temperature plot
+#--add an arrow to temperature plot?No.
 fig_t <- 
-  TempFigSummary(f.data = t) + 
-    geom_text(aes(x = as.Date("2023-06-28"), y = -2.5, label = "Warm Springs"),
-              family = "Times New Roman",
-              check_overlap = T) + 
-    geom_segment(aes(xend = as.Date("2023-05-15"),
-                     yend = 1, 
-                     x = as.Date("2023-06-05"),
-                     y = -1.7),
-                 arrow = arrow())
+  TempFigSummary(f.data = t) #+ 
+  #   geom_text(aes(x = as.Date("2023-06-28"), y = -2.5, label = "Warm Springs"),
+  #             family = "Times New Roman",
+  #             check_overlap = T) + 
+  #   geom_segment(aes(xend = as.Date("2023-05-15"),
+  #                    yend = 1, 
+  #                    x = as.Date("2023-06-05"),
+  #                    y = -1.7),
+  #                arrow = arrow())
   
-library(ggplotlyExtra)
-library(plotly)
-ggplotly(fig_t)
-
-fig_t
+#library(ggplotlyExtra)
+#library(plotly)
+#ggplotly(fig_t)
 
 
+# temp + precip fig -------------------------------------------------------
+
+w %>% 
+  select(trial_label) %>% 
+  distinct()
 
 fig_t + fig_cp + 
   plot_annotation(
     theme = theme_border,
     title = str_wrap("Weather deviations from historical averages", width = 80), 
-    subtitle = str_wrap("Cool Aprils, dry growing seasons at all 17 trials", width = 80))
+    subtitle = str_wrap("Warm springs, dry growing seasons at all 20 trials", width = 80))
 
 ggsave("figs/fig03_wea.jpg", width = 7, height = 5)
 

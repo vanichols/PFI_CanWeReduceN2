@@ -29,7 +29,7 @@ my_wea_theme.fxn <-
 
 #--deviation from long term average, temp
 
-TempFigInd <- function(f.data = t, f.trial_label = "Fredericks") {
+TempFigInd <- function(f.data = t, f.trial_label = "Boyer") {
   
   tmp.data <- 
     f.data |>
@@ -57,7 +57,7 @@ TempFigInd <- function(f.data = t, f.trial_label = "Fredericks") {
               linewidth = 3,
               show.legend = F) + 
     geom_text(aes(x = as_date("2023/07/01"),
-                  y = 5.5,
+                  y = 8,
                   #hjust = 0,
                   label = "Warmer than average"),
               check_overlap = T,
@@ -65,14 +65,14 @@ TempFigInd <- function(f.data = t, f.trial_label = "Fredericks") {
               family = "Times New Roman",
               color = "gray50") +
     geom_text(aes(x = as_date("2023/07/01"),
-                  y = -5.5,
+                  y = -4,
                   #hjust = 0,
                   label = "Cooler than average"),
               check_overlap = T,
               fontface = "italic",
               family = "Times New Roman",
               color = "gray50") +
-    scale_y_continuous(limits = c(-6, 6)) +
+    scale_y_continuous(limits = c(-6, 13)) +
     scale_x_date(date_breaks = "1 month", 
                  date_labels = "%b") +
     labs(x = NULL,
@@ -153,7 +153,7 @@ TempFigSummary <- function(f.data = t) {
               linewidth = 1,
               show.legend = F) + 
     geom_text(aes(x = as_date("2023/07/01"),
-                  y = 6.5,
+                  y = 8,
                   #hjust = 0,
                   label = "Warmer than average"),
               check_overlap = T,
@@ -161,14 +161,14 @@ TempFigSummary <- function(f.data = t) {
               fontface = "italic",
               color = "gray50") +
     geom_text(aes(x = as_date("2023/07/01"),
-                  y = -5.5,
+                  y = -4,
                   #hjust = 0,
                   label = "Cooler than average"),
               check_overlap = T,
               family = "Times New Roman",
               fontface = "italic",
               color = "gray50") +
-    scale_y_continuous(limits = c(-6, 6)) +
+    scale_y_continuous(limits = c(-6, 13)) +
     scale_x_date(date_breaks = "1 month", 
                  date_labels = "%b") +
     labs(x = NULL,
