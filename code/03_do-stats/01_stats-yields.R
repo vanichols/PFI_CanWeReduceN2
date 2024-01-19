@@ -18,10 +18,9 @@ d_raw <- read_csv("data_tidy/td_cornyields.csv")
 d_raw %>% 
   filter(is.na(yield_buac))
 
-#--get rid of the NA
+#--process if needed
 y <-
-  d_raw  |> 
-  filter(!(trial_key == "bake_22" & rep == 1))
+  d_raw
 
 #--get the trial keys to loop through 
 tk <- 
@@ -48,7 +47,8 @@ emmeans(mf, "trt") |>
 
 res_f <- NULL
 
-i <- 1
+i <- 4
+
 
 for (i in 1:length(tk)) {
 
@@ -67,11 +67,20 @@ for (i in 1:length(tk)) {
     tidy()  %>%
     filter(term == "trttyp")
   
-  tmp.lsd <- 
+  #--ande_23 has only 3 reps, one w/a missing value. Won't produec an LSD for some reason
+  
+  if ("LSD" %in% names(
     (LSD.test(tmp.mod, "trt"))$statistics |> 
-    as_tibble() |> 
-    pull(LSD)
+    as_tibble()) == 1) {
+    tmp.lsd <- 
+      (LSD.test(tmp.mod, "trt"))$statistics |> 
+      as_tibble() |> 
+      pull(LSD)} else {
+        tmp.lsd <- NA
+      }
 
+  tmp.lsd
+  
   tmp.res <-
     tmp.em |>
     mutate(
@@ -159,6 +168,7 @@ res_comp <-
 res_comp %>% 
   filter(dif == "y")
 
+#--random effects work for anderson...
 
 # write fixed effect results ----------------------------------------------
 

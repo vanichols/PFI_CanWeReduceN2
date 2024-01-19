@@ -76,7 +76,7 @@ fig_t + fig_cp +
   plot_annotation(
     theme = theme_border,
     title = str_wrap("Weather deviations from historical averages", width = 80), 
-    subtitle = str_wrap("Warm springs, dry growing seasons at all 20 trials", width = 80))
+    subtitle = str_wrap("Warm springs, dry finish to growing seasons at all 20 trials", width = 80))
 
 ggsave("figs/fig03_wea.jpg", width = 7, height = 5)
 

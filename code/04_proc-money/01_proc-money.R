@@ -1,6 +1,7 @@
 #-notes:
 # 4/24 - reran using data-supported prices for corn
 # 5/23 - changed to be based on statistical yields
+#--recreated/rerun on 1/18/2024
 
 library(tidyverse)
 library(lubridate)

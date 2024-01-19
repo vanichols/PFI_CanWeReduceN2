@@ -1,6 +1,7 @@
 #-notes:
-# 4/24 - reran using data-supported prices for corn
-# 5/15 reran again using updated numbers (confused)
+# 4/24/23 - reran using data-supported prices for corn
+# 5/15/23 reran again using updated numbers (confused)
+#--recreated 1/18/2024 w/2023 data
 
 library(tidyverse)
 library(scales)
@@ -76,6 +77,8 @@ d_money_fig <-
          #value_mid = value_mid/dif_nrate_lbac,
          trial_label = paste0(trial_label, ", -", round(dif_nrate_lbac), " lb/ac"))
 
+d_money_fig %>% 
+  filter(clr != "bad")
 
 d_money_fig %>% 
   ggplot() + 
@@ -130,10 +133,10 @@ d_money_fig %>%
     show.legend = F,
     pch = 17,
     size = 2) +
-  geom_text(aes(x = 12, y = 110), label = "Financial savings", check_overlap = T,
+  geom_text(aes(x = 15, y = 110), label = "Financial savings", check_overlap = T,
             #hjust = 0,
             fontface = "italic", color = pfi_blue) +
-  geom_text(aes(x = 7, y = -200), label = "Financial loss", check_overlap = T,
+  geom_text(aes(x = 4, y = -150), label = "Financial loss", check_overlap = T,
             #hjust = 0,
             fontface = "italic", color = pfi_orange) +
   scale_y_continuous(labels = label_dollar(),
@@ -143,11 +146,12 @@ d_money_fig %>%
   scale_color_manual(values = c("good" = pfi_blue, "neutral" = pfi_tan, "bad" = pfi_orange)) +
   labs(x = NULL,
        y = "Dollars\nper acre",
-       title = str_wrap("Seven (41%) trials saw potential for savings when reducing N rates",
+       title = str_wrap("Sixteen (73%) trials saw potential for savings when reducing N rates",
                         width = 80),
-       subtitle = "Ten trials saw financial losses in all price scenarios") + 
+       subtitle = "Six trials saw financial losses in all price scenarios") + 
   my_money_theme
 
 ggsave("figs/fig04_money.jpg", width = 7, height = 5)
 
 
+14/20

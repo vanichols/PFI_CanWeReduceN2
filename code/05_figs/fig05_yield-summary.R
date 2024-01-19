@@ -146,7 +146,7 @@ d_fig |>
                                 "bad" = pfi_orange)) +
   labs(x = NULL,
        y = "Impact of reduced N rate on corn yield (bu/ac)\nrelative to typical N treatment",
-       title = "Significant yield reductions are not indicative of financial outcomes",
+       title = "Yield reductions are not indicative of financial outcomes",
        subtitle = "Financial outcome from reduced N rate assuming midpoint price scenario as reference on right",
        caption = "* = Significant change in yield at 95% confidence level")
 
