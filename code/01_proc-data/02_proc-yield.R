@@ -76,7 +76,22 @@ dat3 |>
   write_csv("data_tidy/td_cornyields.csv")
 
 
+# yield cvs ---------------------------------------------------------------
 
+dat3 %>% 
+  group_by(trial_key) %>% 
+  summarise(me = mean(yield_buac, na.rm = T),
+            sd = sd(yield_buac, na.rm = T),
+            cv = sd/me) %>% 
+  arrange(cv) %>% 
+  mutate(trial_key = fct_inorder(trial_key)) %>% 
+  ggplot(aes(trial_key, cv)) + 
+  geom_point() + 
+  coord_flip() + 
+  scale_y_continuous(labels = label_percent())
+
+ggsave("figs_scratch/scratch_cvs.png")
+  
 # make df with diffs ------------------------------------------------------
 
 d_diff <- 
