@@ -2,6 +2,7 @@
 # 4/24 - reran using data-supported prices for corn
 # 5/23 - changed to be based on statistical yields
 #--recreated/rerun on 1/18/2024
+#--1/25/2024 updated prices
 
 library(tidyverse)
 library(lubridate)
@@ -32,16 +33,18 @@ y <-
   select(trial_key, trt, yield_buac) %>% 
   left_join(nrates)
 
-#--stefan provided range in N prices
-#--N high price = $1.20/lb
-#--N low price = $0.60/lb
-n_hi <- 1.2
-n_lo <- 0.6
+#--range in n prices
+nprice <- read_csv("data_tidy/td_nprice.csv")
+
+#--N high price = $1.40/lb (was $1.20/lb last year)
+#--N low price = $0.14/lb (as $0.60/lb last year)
+n_hi <- max(nprice$cost_unit_n)
+n_lo <- min(nprice$cost_unit_n)
 n_av <- mean(c(n_hi, n_lo))
 
-#--corn price in 2022 https://www.extension.iastate.edu/agdm/crops/pdf/a2-11.pdf
-crn_hi <- 7.48
-crn_lo <- 5.70
+#--corn price in 2023 https://www.extension.iastate.edu/agdm/crops/pdf/a2-11.pdf (December not updated?)
+crn_hi <- 6.83 # last year it was $7.48
+crn_lo <- 4.74 # last year it was $5.70
 crn_av <- mean(c(crn_hi, crn_lo))
 
 

@@ -121,7 +121,7 @@ d_fig |>
            color = "black",
            show.legend = F) +
   geom_text(aes(reorder(trial_label, -yld_dif_buac), 
-                yld_dif_buac - 2, 
+                ifelse(yld_dif_buac < 0, yld_dif_buac - 2, yld_dif_buac + 2), 
                 label = yld_sig,
                 hjust = 0,
                 vjust = 0.75)) +
@@ -137,8 +137,8 @@ d_fig |>
   coord_flip() +
   my_yield_theme +
   scale_size_manual(values = c(0, 2)) +
-  scale_y_continuous(limits = c(-60, 40),
-                     breaks = c(-60, -40, -20, 0,
+  scale_y_continuous(limits = c(-23, 40),
+                     breaks = c(-20, 0,
                                 20, 40)) +
   scale_fill_manual(values = c(pfi_tan, pfi_green)) +
   scale_color_manual(values = c("neutral" = pfi_tan, 
