@@ -65,7 +65,14 @@ dat2 <-
   rename(nrate_lbac = nrate, yield_buac = yield) %>% 
   select(trial_key, rep, trt, nrate_lbac, yield_buac)
 
-dat2 |> 
+
+#--remove dengler strip 1 and boyer rep 4 of typical
+dat3 <-
+  dat2 %>% 
+  filter(!(trial_key == "boye_23" & rep == 4 & trt == "typ")) %>% 
+  filter(!(trial_key == "deng_23" & rep == 1 & trt == "red"))
+
+dat3 |> 
   write_csv("data_tidy/td_cornyields.csv")
 
 
@@ -73,7 +80,7 @@ dat2 |>
 # make df with diffs ------------------------------------------------------
 
 d_diff <- 
-  dat2 %>% 
+  dat3 %>% 
   pivot_longer(nrate_lbac:yield_buac) %>% 
   pivot_wider(names_from = trt, values_from = value) %>% 
   mutate(dif = typ - red,

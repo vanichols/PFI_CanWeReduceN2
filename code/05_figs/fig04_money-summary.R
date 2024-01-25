@@ -65,7 +65,7 @@ d_money <-
   ))
          
 
-# ordered by max value -------------------------------------------------------------
+# ordered by max value? No order by triangle value (mean) -------------------------------------------------------------
 
 #--create nice labels for fig
 #--don't normalize
@@ -75,18 +75,18 @@ d_money_fig <-
   mutate(#value_min = value_min / dif_nrate_lbac,
          #value_max = value_max/dif_nrate_lbac,
          #value_mid = value_mid/dif_nrate_lbac,
-         trial_label = paste0(trial_label, ", -", round(dif_nrate_lbac), " lb/ac"))
+         trial_label = paste0(trial_label, ", -", round(dif_nrate_lbac), " lb/ac")) 
 
-d_money_fig %>% 
-  filter(clr != "bad")
+
+#--NOTE: you will need to change the x scale to match the best for the figure
 
 d_money_fig %>% 
   ggplot() + 
   geom_hline(yintercept = 0) +
   #--creating white background for alpha
   geom_segment(aes(
-    x = reorder(trial_label, value_max),
-    xend = reorder(trial_label, value_max),
+    x = reorder(trial_label, value_mid),
+    xend = reorder(trial_label, value_mid),
     y = value_min,
     yend = value_max), 
     color = "white",
@@ -95,8 +95,8 @@ d_money_fig %>%
   )  +   
   #--alpha
   geom_segment(aes(
-    x = reorder(trial_label, value_max),
-    xend = reorder(trial_label, value_max),
+    x = reorder(trial_label, value_mid),
+    xend = reorder(trial_label, value_mid),
     y = value_min,
     yend = value_max, 
     color = clr),
@@ -106,8 +106,8 @@ d_money_fig %>%
   )  + 
   #--best case
   geom_segment(aes(
-    x = reorder(trial_label, value_max),
-    xend = reorder(trial_label, value_max),
+    x = reorder(trial_label, value_mid),
+    xend = reorder(trial_label, value_mid),
     y = value_max - 5,
     yend = value_max, 
     color = clr),
@@ -116,8 +116,8 @@ d_money_fig %>%
   )  + 
   #--wrost case
   geom_segment(aes(
-    x = reorder(trial_label, value_max),
-    xend = reorder(trial_label, value_max),
+    x = reorder(trial_label, value_mid),
+    xend = reorder(trial_label, value_mid),
     y = value_min + 5,
     yend = value_min, 
     color = clr),
@@ -126,7 +126,7 @@ d_money_fig %>%
   )  + 
   #--midpoint
   geom_point(aes(
-    x = reorder(trial_label, value_max),
+    x = reorder(trial_label, value_mid),
     y = value_mid, 
     color = clr),
     #color = "white",
@@ -136,7 +136,7 @@ d_money_fig %>%
   geom_text(aes(x = 15, y = 110), label = "Financial savings", check_overlap = T,
             #hjust = 0,
             fontface = "italic", color = pfi_blue) +
-  geom_text(aes(x = 4, y = -150), label = "Financial loss", check_overlap = T,
+  geom_text(aes(x = 4, y = -140), label = "Financial loss", check_overlap = T,
             #hjust = 0,
             fontface = "italic", color = pfi_orange) +
   scale_y_continuous(labels = label_dollar(),
@@ -146,12 +146,12 @@ d_money_fig %>%
   scale_color_manual(values = c("good" = pfi_blue, "neutral" = pfi_tan, "bad" = pfi_orange)) +
   labs(x = NULL,
        y = "Dollars\nper acre",
-       title = str_wrap("Sixteen (73%) trials saw potential for savings when reducing N rates",
+       title = str_wrap("Fifteen (75%) trials saw potential for savings when reducing N rates",
                         width = 80),
-       subtitle = "Six trials saw financial losses in all price scenarios") + 
+       subtitle = "Four trials saw financial losses in all price scenarios") + 
   my_money_theme
 
 ggsave("figs/fig04_money.jpg", width = 7, height = 5)
 
 
-14/20
+15/20

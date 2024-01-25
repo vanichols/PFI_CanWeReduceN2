@@ -59,7 +59,7 @@ m <-
          crev_av = crn_av * yield_buac) 
 
 
-#--show ranges of high and low
+#--Get ranges of high and low
 
 d_money <- 
   m |> 
