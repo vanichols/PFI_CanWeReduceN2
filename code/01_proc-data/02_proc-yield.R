@@ -4,8 +4,11 @@
 library(tidyverse)
 library(janitor)
 library(readxl)
+library(scales)
 
 rm(list = ls())
+
+source("code/06_GHG/fxn_conversions.R")
 
 # who should we have data for? --------------------------------------------
 
@@ -102,7 +105,10 @@ d_diff <-
          name = paste0("dif_", name)) %>% 
   select(trial_key, rep, name, dif) %>% 
   pivot_wider(names_from = name, values_from = dif) %>% 
-  filter(!is.na(dif_yield_buac)) 
+  filter(!is.na(dif_yield_buac)) %>% 
+  mutate(
+    #--units are currently lb n/ac
+    kgn_ha_avoided = dif_nrate_lbac * kg_per_lb * ac_per_ha)
 
 d_diff %>% 
   write_csv("data_tidy/td_trtdiffs.csv")

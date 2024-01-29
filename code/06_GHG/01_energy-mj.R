@@ -6,7 +6,6 @@ library(lubridate)
 
 rm(list = ls())
 
-source("code/06_GHG/fxn_conversions.R")
 
 # avoided fertilizer ------------------------------------------------------------------
 
@@ -31,9 +30,6 @@ r_ferte <-
 #--get assumed amoutn of n application avoided
 e1 <- 
   d_raw %>% 
-  mutate(
-    #--units are currently lb n/ac
-    kgn_ha_avoided = dif_nrate_lbac * kg_per_lb * ac_per_ha) %>% 
   mutate(desc = "nitrogen")
 
 
