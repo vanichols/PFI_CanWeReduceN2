@@ -123,6 +123,7 @@ fig_dat %>%
                          red_abs_max, " lb N/ac lower than typical rate)")) + 
   my_nitapp_theme 
 
-ggsave("figs/fig02_nrates.jpg", width = 8, height = 5.5)
+ggsave("figs/fig02_nrates.jpg", width = 10.8, height = 7.3)
+
 
 

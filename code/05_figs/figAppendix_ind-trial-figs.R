@@ -1,6 +1,6 @@
 #--make summary figure w/weather, money, yields
 #--note the fonts aren't working, cufrently times new roman
-#--waldo's money outcomes are impacted by rep 1, make an alternative
+#--want to add GHG emissions somehow
 
 library(tidyverse)
 library(scales)
@@ -43,12 +43,16 @@ theme_border <-
  
 tk <- 
   read_csv("data_tidy/td_trialkey.csv") %>% 
-  select(trial_key, trial_label) %>% 
-  add_row(trial_key = "waldnorep1_22", trial_label = "Waldo")
+  select(trial_key, trial_label) 
 
 d_diffs <- 
   read_csv("data_tidy/td_trtdiffs.csv") %>% 
   left_join(tk)
+
+d_ghg <- 
+  read_csv("data_tidy/td_co2e.csv") %>% 
+  select(-co2e_kgha) %>% 
+  mutate(co2e_lbac = round(co2e_lbac, 0))
 
 # yields ------------------------------------------------------------------
 
@@ -101,7 +105,9 @@ y3 <-
          sig_lab = 
            case_when(
              (pval < 0.05) ~ paste("Significant", dir, "of", abs(round(diff_est, 0)), "bu/ac"),
-             (pval > 0.05) ~ "No statistical difference in yields"))
+             (pval > 0.05) ~ "No statistical difference in yields")) %>% 
+  left_join(d_ghg) %>% 
+  mutate(co2lab = paste(co2e_lbac, "lb CO2e avoided per acre"))
 
 # money -------------------------------------------------------------------
 
@@ -148,10 +154,6 @@ my_names_raw <-
   pull(trial_label) |> 
   unique()
 
-#--veenstra will be special, leave just as a placeholder
-my_names <- my_names_raw[-16]
-
-
 
 # weather -----------------------------------------------------------------
 
@@ -161,7 +163,7 @@ tkcity <-
 
 w <- 
   read_csv("data_tidy/td_wea.csv") %>% 
-  full_join(tkcity, by = "city")
+  full_join(tkcity, by = "city", relationship = "many-to-many")
 
 t <- 
   w %>% 
@@ -177,7 +179,7 @@ cp <-
 # functions ---------------------------------------------------------------
 
 #--test
-y.tst <- y3 %>% filter(trial_key == "wald_22")
+y.tst <- y3 %>% filter(trial_key == "abel_23")
 
 YieldFig <- function(y.data = y.tst) {
   
@@ -210,12 +212,19 @@ YieldFig <- function(y.data = y.tst) {
               color = "gray") +
     #--diff
     geom_text(aes(x = 1.5,
-                  y = 1.4 * yield_max,
+                  y = 1.75 * yield_max,
                   label = sig_lab),
               check_overlap = T,
               family = "Times New Roman",
               color = "gray50") +
-    scale_y_continuous(expand = expansion(0.1)) +
+    #--ghg avoided
+    geom_text(aes(x = 1.5,
+                  y = 1.5 * yield_max,
+                  label = co2lab),
+              check_overlap = T,
+              family = "Times New Roman",
+              color = "gray50") +
+    scale_y_continuous(expand = expansion(0.15)) +
     scale_fill_manual(values = c(pfi_dkgreen, pfi_green)) +
     my_combo_theme +
     theme(axis.text.x = element_text(size = rel(1.1))) +
@@ -235,7 +244,7 @@ YieldFig <- function(y.data = y.tst) {
 # 
 # fig1
 
-m.tst <- m %>% filter(trial_label == "Harvey")
+m.tst <- m %>% filter(trial_label == "Aukes")
 
 MoneyFig <- function(m.data = m.tst) {
   
@@ -393,6 +402,8 @@ MoneyFig <- function(m.data = m.tst) {
   
 }
 
+MoneyFig()
+
 # combine results -----------------------------------------------------------------
 
 
@@ -435,26 +446,55 @@ MoneyFig <- function(m.data = m.tst) {
 
 # loop it -----------------------------------------------------------------
 
+#--to label the appendix
 my_letters <- letters %>% str_to_upper()
 
-i <- 1
+#--to loop through
+my_names <- y %>% select(trial_label) %>% distinct() %>% pull(trial_label)
 
-for (i in c(seq(1, 14, 1), 16)){
+#--for reference
+name_letter_guide <- 
+  tibble(trial_label = my_names) %>% 
+  mutate(trial_label = str_remove_all(trial_label, pattern = "[:digit:]")) %>% 
+  distinct() %>% 
+  mutate(let = LETTERS[1:n()],
+         num = 1:n()) %>% 
+  #--note doubles
+  mutate(dbl_yn = case_when(
+    trial_label == "Amundson" ~ "y",
+    trial_label == "Bakehouse" ~ "y",
+    trial_label == "McCaw" ~ "y",
+    TRUE ~ "n"
+  ))
 
+name_letter_guide_no_doubles <- 
+  name_letter_guide %>% 
+  filter(dbl_yn == "n")
+
+
+# non-double trials -------------------------------------------------------
+
+
+for (i in 1:nrow(name_letter_guide_no_doubles)){
+
+  ref.tmp <- 
+    name_letter_guide_no_doubles %>% 
+    slice(i)
+  
   #--fig name
-  tmp.figname <- paste0(my_letters[i], "1")
+  tmp.figname <- paste0(ref.tmp$let, "1")
   
   #--yield/money
   tmp.ydat <- 
     y3 |> 
-    filter(trial_label == my_names[i]) 
+    filter(trial_label == ref.tmp$trial_label) 
   
   fig1 <- YieldFig(y.data = tmp.ydat)
   
  
   tmp.mdat <- 
     m %>% 
-    filter(trial_label == my_names[i])
+    filter(trial_label == ref.tmp$trial_label)
   
   fig3 <- MoneyFig(m.data = tmp.mdat)
   
@@ -463,15 +503,21 @@ for (i in c(seq(1, 14, 1), 16)){
     plot_annotation(theme = theme_border) 
   
   #--weather
-  tmp.name <- my_names[i]
+  tmp.name <- ref.tmp$trial_label
 
-  wfig1 <- 
-    TempFigInd(f.data = t, f.trial_label = tmp.name) +
-    labs(title = "Temperature")
+  suppressMessages(
+     wfig1 <- 
+      TempFigInd(f.data = t, f.trial_label = tmp.name) +
+      labs(title = "Temperature")
+  )
   
-  wfig2 <- 
-    CumPrecipFigInd(f.data = cp, f.trial_label = tmp.name) + 
-    labs(title = "Precipitation")
+  suppressMessages(
+    wfig2 <- 
+      CumPrecipFigInd(f.data = cp, f.trial_label = tmp.name) + 
+      labs(title = "Precipitation")
+    
+  )
+  
   
   fig_wea <- 
     wfig1 + wfig2  
@@ -492,7 +538,7 @@ for (i in c(seq(1, 14, 1), 16)){
                           " lb/ac to ",
                           tst.nlo, 
                           " lb/ac in ",
-                          tmp.loc, " IA, 2022")
+                          tmp.loc, " IA, 2023")
   
   fig_wea / fig_res + 
     plot_annotation(theme = theme_border,
@@ -500,86 +546,104 @@ for (i in c(seq(1, 14, 1), 16)){
     theme(plot.title = element_text(size = rel(1.4)),
           text = element_text(family = "Times New Roman"))
   
-  ggsave(paste0("figs/ind-figs/", tmp.figname, "_", my_names[i], ".jpg"), 
-         height = 6.5, width = 8)
-  
+  ggsave(paste0("figs/ind-figs/", tmp.figname, "_", ref.tmp$trial_label, ".jpg"), 
+         height = 7, width = 8)
+
+  print(paste0("Wrote ", tmp.figname, "_", ref.tmp$trial_label))  
   
 }
 
 
-# #15 (O) veenstra is special ---------------------------------------------
+# two-trialed sheets ---------------------------------------------
 
 #--yield, patchworked
 
-v.yield <- 
-  y3 %>% 
-  filter(grepl("veen", trial_key))
+name_letter_guide_doubles <- 
+  name_letter_guide %>% 
+  filter(dbl_yn == "y")
 
-v.yield1 <- v.yield %>% filter(trial_label == "Veenstra1")
-v.yield2 <- v.yield %>% filter(trial_label == "Veenstra2")
+i <- 1
 
-yfig1 <- YieldFig(y.data = v.yield1) + facet_grid(.~trial_label) #+ labs(title = NULL)
-yfig2 <- YieldFig(y.data = v.yield2) + facet_grid(.~trial_label) #+ labs(title = NULL)
+for (i in 1:nrow(name_letter_guide_doubles)){
+  
+  
+  ref.tmp <- name_letter_guide_doubles %>% slice(i)
+  
+  n1.tmp <- paste0(ref.tmp$trial_label, "1")
+  n2.tmp <- paste0(ref.tmp$trial_label, "2")
+  
+  v.yield1 <- y3 %>% filter(trial_label == n1.tmp)
+  v.yield2 <- y3 %>% filter(trial_label == n2.tmp)
+  
+  yfig1 <- YieldFig(y.data = v.yield1) + facet_grid(.~trial_label) #+ labs(title = NULL)
+  yfig2 <- YieldFig(y.data = v.yield2) + facet_grid(.~trial_label) #+ labs(title = NULL)
+  
+  yfig <- yfig1 / yfig2 #  + plot_annotation("Corn yield response")
+  
+  ##---money, patchworked
+  
+  v.money1 <- 
+    m %>% filter(trial_label == n1.tmp)
+  
+  v.money2 <- 
+    m %>% filter(trial_label == n2.tmp)
+  
+  mfig1 <- MoneyFig(m.data = v.money1) + facet_grid(.~trial_label) #+ labs(title = NULL)
+  mfig2 <- MoneyFig(m.data = v.money2) + facet_grid(.~trial_label) #+ labs(title = NULL)
+  
+  mfig <- mfig1/mfig2 #+ plot_annotation("Financial outcome")
+  
+  vfig_res <- 
+    yfig | mfig & # + plot_layout(widths = c(0.5, 0.5)) & 
+    plot_layout(guides = "collect") &
+    plot_annotation(theme = theme_border) 
+  
+  #--weather, only use one of the names
+  v.name <- n1.tmp
+  
+  suppressMessages(
+    vfig3 <- 
+      TempFigInd(f.data = t, f.trial_label = v.name) +
+      labs(title = "Temperature")
+  )
+    
+  vfig4 <- 
+    CumPrecipFigInd(f.data = cp, f.trial_label = v.name) + 
+    labs(title = "Precipitation")
+  
+  vfig_wea <- 
+    vfig3 + vfig4
+  
+  #--overall plot title - assumes the same reduction was used in both trials
+  tst.nlo <- 
+    v.yield1 %>% filter(grepl("Reduced", trt)) %>% pull(nrate_lbac) %>% 
+    unique() %>% round()
+  
+  tst.nhi <- 
+    v.yield1 %>% filter(!grepl("Reduced", trt)) %>% pull(nrate_lbac) %>% 
+    unique() %>% round()
+  
+  tmp.loc <- t %>% filter(trial_label == v.name) %>% pull(city) %>% unique() %>% str_to_title()
+  
+  tmp.plot.title = paste0("Impact of reducing N from ", 
+                          tst.nhi, 
+                          " lb/ac to ",
+                          tst.nlo, 
+                          " lb/ac in ",
+                          tmp.loc, " IA, 2023")
+  
+  vfig_wea / vfig_res + 
+    plot_layout(heights = c(0.3, 0.7)) +
+    plot_annotation(theme = theme_border,
+                    title = tmp.plot.title) &
+    theme(plot.title = element_text(size = rel(1.4)),
+          text = element_text(family = "Times New Roman"))
+  
+  ggsave(paste0("figs/ind-figs/", ref.tmp$let, "1_", ref.tmp$trial_label, ".jpg"), 
+       height = 12, width = 8)
 
-yfig <- yfig1 / yfig2 #  + plot_annotation("Corn yield response")
-   
-##---money, patchworked
+  print(paste0("Wrote ", ref.tmp$let, "_", ref.tmp$trial_label))  
+  
+}
 
-v.money1 <- 
-  m %>% filter(trial_label == "Veenstra1")
-
-v.money2 <- 
-  m %>% filter(trial_label == "Veenstra2")
-
-mfig1 <- MoneyFig(m.data = v.money1) + facet_grid(.~trial_label) #+ labs(title = NULL)
-mfig2 <- MoneyFig(m.data = v.money2) + facet_grid(.~trial_label) #+ labs(title = NULL)
-
-mfig <- mfig1/mfig2 #+ plot_annotation("Financial outcome")
-
-vfig_res <- 
-  yfig | mfig & # + plot_layout(widths = c(0.5, 0.5)) & 
-  plot_layout(guides = "collect") &
-  plot_annotation(theme = theme_border) 
-
-
-#--weather
-v.name <- "Veenstra1"
-
-vfig3 <- 
-  TempFigInd(f.data = t, f.trial_label = v.name) +
-  labs(title = "Temperature")
-
-vfig4 <- 
-  CumPrecipFigInd(f.data = cp, f.trial_label = v.name) + 
-  labs(title = "Precipitation")
-
-vfig_wea <- 
-  vfig3 + vfig4
-
-#--overall plot title
-tst.nlo <- 
-  v.yield %>% filter(grepl("Reduced", trt)) %>% pull(nrate_lbac) %>% 
-  unique() %>% round()
-
-tst.nhi <- 
-  v.yield %>% filter(!grepl("Reduced", trt)) %>% pull(nrate_lbac) %>% 
-  unique() %>% round()
-
-tmp.loc <- t %>% filter(trial_label == v.name) %>% pull(city) %>% unique() %>% str_to_title()
-
-tmp.plot.title = paste0("Impact of reducing N from ", 
-                        tst.nhi, 
-                        " lb/ac to ",
-                        tst.nlo, 
-                        " lb/ac in ",
-                        tmp.loc, " IA, 2022")
-
-vfig_wea / vfig_res + 
-  plot_layout(heights = c(0.3, 0.7)) +
-  plot_annotation(theme = theme_border,
-                  title = tmp.plot.title) &
-  theme(plot.title = element_text(size = rel(1.4)),
-        text = element_text(family = "Times New Roman"))
-
-ggsave(paste0("figs/ind-figs/O1_Veenstra.jpg"), 
-       height = 9, width = 8)
+  

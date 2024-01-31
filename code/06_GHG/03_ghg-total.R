@@ -4,10 +4,11 @@
 library(tidyverse)
 library(lubridate)
 library(readxl)
+library(scales)
 
 rm(list = ls())
 
-
+source("code/06_GHG/fxn_conversions.R")
 
 # data --------------------------------------------------------------------
 
@@ -22,7 +23,7 @@ y <-
 
 d <- 
   crossing(e, fert_type = n %>% pull(fert_type)) %>%  
-  bind_rows(n)
+  bind_rows(n) 
 
 d %>% 
   write_csv("data_tidy/td_ghg.csv")
@@ -33,7 +34,8 @@ d %>%
   summarise(co2e_kgha = sum(co2e_kgha)) %>%
   left_join(y, relationship = "many-to-many") %>% 
   ggplot(aes(dif_nrate_lbac, co2e_kgha)) + 
-  geom_point(aes(color = fert_type))
+  geom_point(aes(color = fert_type)) + 
+  geom_line(aes(color = fert_type))
 
 #--the type of fertilizer assumed isn't that big of a deal. just take an average
 
@@ -42,18 +44,23 @@ d_avg <-
   group_by(trial_key, fert_type) %>% 
   summarise(co2e_kgha = sum(co2e_kgha)) %>%
   group_by(trial_key) %>% 
-  summarise(co2e_kgha = mean(co2e_kgha)) 
+  summarise(co2e_kgha = mean(co2e_kgha)) %>% 
+  mutate(co2e_lbac = co2e_kgha * ha_per_ac * lb_per_kg)
 
+d_avg %>% 
+  write_csv("data_tidy/td_co2e.csv")
 
-#--multiply the lbac by 8.7 to get kg co2e/ha
+#--multiply the lbac by 8.7 to get kg co2e/ha, by 7.82 to get lb co2e/ac
 #--stefan probably wants lb/ac
 d_avg %>% 
   left_join(y) %>% 
-  mutate(mf = co2e_kgha/dif_nrate_lbac)
+  mutate(mf = co2e_lbac/dif_nrate_lbac)
 
 d_avg %>% 
   mutate(year = 2023,
-         cumco2e_kgha = cumsum(co2e_kgha),
+         cumco2e_lbac = cumsum(co2e_lbac),
          trial_key = fct_inorder(trial_key)) %>% 
-  ggplot(aes(trial_key, cumco2e_kgha)) + 
-  geom_point()
+  ggplot(aes(trial_key, cumco2e_lbac)) + 
+  geom_point() +
+  scale_y_continuous(labels = label_comma()) +
+  labs(y = "Cumulative pounds of CO2e avoided per ha")
