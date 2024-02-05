@@ -48,9 +48,10 @@ d_avg <-
   mutate(co2e_lbac = co2e_kgha * ha_per_ac * lb_per_kg)
 
 d_avg %>% 
+  mutate(FTMco2e_lbac = co2e_lbac/7.82*11.4) %>% 
   write_csv("data_tidy/td_co2e.csv")
 
-#--multiply the lbac by 8.7 to get kg co2e/ha, by 7.82 to get lb co2e/ac
+#--multiply the lbac by 8.7 to get kg co2e/ha, by 7.82 to get lb co2e/ac. FTM does 11.4. 
 #--stefan probably wants lb/ac
 d_avg %>% 
   left_join(y) %>% 

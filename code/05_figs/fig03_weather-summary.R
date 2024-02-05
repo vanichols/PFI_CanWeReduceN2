@@ -68,15 +68,17 @@ fig_t <-
 
 # temp + precip fig -------------------------------------------------------
 
-w %>% 
+nu_trials <- 
+  nrow(w %>% 
   select(trial_label) %>% 
-  distinct()
+  distinct())
 
 fig_t + fig_cp + 
   plot_annotation(
     theme = theme_border,
     title = str_wrap("Weather deviations from historical averages", width = 80), 
-    subtitle = str_wrap("Warm springs, dry finish to growing seasons at all 20 trials", width = 80))
+    subtitle = str_wrap(paste0("Warm springs, dry finish to growing seasons at all ", 
+                               nu_trials, " trials"), width = 80))
 
 ggsave("figs/fig03_wea.jpg", width = 7, height = 5)
 

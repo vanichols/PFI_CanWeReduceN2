@@ -79,6 +79,24 @@ d_money_fig <-
 
 
 #--NOTE: you will need to change the x scale to match the best for the figure
+library(english)
+
+nu_trials <- nrow(d_money_fig)
+
+nu_sav <- nrow(d_money_fig %>% filter(clr != "bad"))
+
+pct_sav <- round(nu_sav/nu_trials, 2) * 100
+
+nu_sav_ch <- 
+  as.character(english(nu_sav)) %>% 
+  str_to_sentence()
+  
+
+nu_loss <- 
+  nrow(d_money_fig %>% 
+         filter(clr == "bad"))
+
+nu_loss_ch <- as.character(english(nu_loss)) %>% str_to_sentence()
 
 d_money_fig %>% 
   ggplot() + 
@@ -146,12 +164,11 @@ d_money_fig %>%
   scale_color_manual(values = c("good" = pfi_blue, "neutral" = pfi_tan, "bad" = pfi_orange)) +
   labs(x = NULL,
        y = "Dollars\nper acre",
-       title = str_wrap("Fifteen (75%) trials saw potential for savings when reducing N rates",
+       title = str_wrap(paste0(nu_sav_ch, " (", pct_sav, "%) trials saw potential for savings when reducing N rates"),
                         width = 80),
-       subtitle = "Four trials saw financial losses in all price scenarios") + 
+       subtitle = paste0(nu_loss_ch, " trials saw financial losses in all price scenarios")) + 
   my_money_theme
 
 ggsave("figs/fig04_money.jpg", width = 7, height = 5)
 
 
-15/20

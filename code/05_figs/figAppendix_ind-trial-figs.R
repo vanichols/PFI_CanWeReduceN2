@@ -52,7 +52,8 @@ d_diffs <-
 d_ghg <- 
   read_csv("data_tidy/td_co2e.csv") %>% 
   select(-co2e_kgha) %>% 
-  mutate(co2e_lbac = round(co2e_lbac, 0))
+  mutate(co2e_lbac = round(co2e_lbac, 0),
+         FTMco2e_lbac = round(FTMco2e_lbac, 0))
 
 # yields ------------------------------------------------------------------
 
@@ -95,6 +96,7 @@ y_diff <-
     diff_calc = round(Typical, 0) - round(Reduced, 0)) %>% 
   select(trial_key, diff_calc)
 
+#--using FTM values 
 y3 <- 
   y2 %>% 
   select(-diff_est) %>% 
@@ -107,7 +109,7 @@ y3 <-
              (pval < 0.05) ~ paste("Significant", dir, "of", abs(round(diff_est, 0)), "bu/ac"),
              (pval > 0.05) ~ "No statistical difference in yields")) %>% 
   left_join(d_ghg) %>% 
-  mutate(co2lab = paste(co2e_lbac, "lb CO2e avoided per acre"))
+  mutate(co2lab = paste("GHG emissions reduced by", FTMco2e_lbac, "lb CO2e per acre"))
 
 # money -------------------------------------------------------------------
 
@@ -159,7 +161,7 @@ my_names_raw <-
 
 tkcity <- 
   read_csv("data_tidy/td_trialkey.csv") %>% 
-  select(trial_key, trial_label, city)
+  select(trial_key, trial_label, city, state)
 
 w <- 
   read_csv("data_tidy/td_wea.csv") %>% 
@@ -404,46 +406,6 @@ MoneyFig <- function(m.data = m.tst) {
 
 MoneyFig()
 
-# combine results -----------------------------------------------------------------
-
-
-# fig_res <- 
-#   fig1 + fig3 + 
-#   plot_layout(widths = c(0.5, 0.5)) & 
-#   plot_annotation(theme = theme_border,
-#                   title = "Test") &
-#   theme(plot.title = element_text(size = rel(1.3)))
-# 
-# fig_res
-# 
-# ggsave("figs/ind-figs/test.png", width = 10, height = 6)
-
-
-
-# test - wea----------------------------------------------------------------
-
-# wfig1 <-
-#   TempFigInd(f.data = t, f.trial_label = "Veenstra1") +
-#   labs(title = "Temperature")
-# 
-# wfig2 <-
-#   CumPrecipFigInd(f.data = cp, f.trial_label = "Veenstra2") +
-#   labs(title = "Precipitation")
-# 
-# fig_wea <-
-#   wfig1 + wfig2
-
-
-
-# test - patchwork a patchwork --------------------------------------------------
-
-# fig_wea / fig_res & 
-#   plot_annotation(theme = theme_border,
-#                   title = "Test big") &
-#   theme(plot.title = element_text(size = rel(1.3)),
-#         text = element_text(family = "Times New Roman"))
-
-
 # loop it -----------------------------------------------------------------
 
 #--to label the appendix
@@ -474,7 +436,7 @@ name_letter_guide_no_doubles <-
 
 # non-double trials -------------------------------------------------------
 
-
+i <- 1
 for (i in 1:nrow(name_letter_guide_no_doubles)){
 
   ref.tmp <- 
@@ -533,12 +495,14 @@ for (i in 1:nrow(name_letter_guide_no_doubles)){
   
   tmp.loc <- t %>% filter(trial_label == tmp.name) %>% pull(city) %>% unique() %>% str_to_title()
   
+  tmp.state <- t %>% filter(trial_label == tmp.name) %>% pull(state) %>% unique() %>% str_to_upper()
+  
   tmp.plot.title = paste0("Impact of reducing N from ", 
                           tst.nhi, 
                           " lb/ac to ",
                           tst.nlo, 
                           " lb/ac in ",
-                          tmp.loc, " IA, 2023")
+                          tmp.loc, " ", tmp.state, ", 2023")
   
   fig_wea / fig_res + 
     plot_annotation(theme = theme_border,

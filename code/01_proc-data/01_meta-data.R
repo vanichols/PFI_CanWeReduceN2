@@ -1,14 +1,10 @@
-#--make a clean meta-data file
-#--read in 'meta' tab from each file in data_stefan
-#--created 1/16/2024
-#--just getting lat/long for now, will need to add other info
+#--created 2/2/2024
+#--purpose: try to automate making of the appendice tables
 
 rm(list = ls())
 
 library(tidyverse)
 library(readxl)
-library(tidygeocoder)
-
 
 # list of files -----------------------------------------------------------
 
@@ -24,13 +20,31 @@ for (i in 1:length(my_files)) {
 
   t.file <- my_files[i]
   
-  t.d <- read_excel(paste0("data_stefan/", t.file), sheet = "meta")
-
+  #--get trial key
+  t.tk <- 
+    read_excel(paste0("data_stefan/", t.file), sheet = "meta") %>% 
+    pull(trial_key)
+  
+  suppressMessages(
+    t.d <- 
+      read_excel(paste0("data_stefan/", t.file), sheet = "fieldactivities") %>% 
+      mutate(trial_key = t.tk)
+  )
+  
+  
   dat <- 
     dat %>% 
     bind_rows(t.d)
+  
+  print(i)
     
 }
+
+
+dat %>% 
+  janitor::clean_names() %>% 
+  select(trial_key, name = x1, value = x2, details)
+
 library(tm)
 
 #--fix some things

@@ -64,6 +64,15 @@ red_abs_max <- round(max(d_nredp$red_abs), 0)
 abs_min <- round(min(d_nredp$typ), 0)
 abs_max <- round(max(d_nredp$typ), 0)
 
+d_nredp %>% 
+  pull(red) %>% 
+  summary()
+
+d_nredp %>% 
+  summarise(red = mean(red),
+            typ = mean(typ))
+
+
 #--get order I want them in
 my_order <- 
   y %>% 
@@ -123,7 +132,7 @@ fig_dat %>%
                          red_abs_max, " lb N/ac lower than typical rate)")) + 
   my_nitapp_theme 
 
-ggsave("figs/fig02_nrates.jpg", width = 10.8, height = 7.3)
+ggsave("figs/fig02_nrates.jpg", width = 8.1, height = 5.6)
 
 
 

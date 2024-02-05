@@ -101,6 +101,8 @@ d_fig <-
   distinct() |> 
   left_join(d_money_fig)
 
+d_fig %>% 
+  filter(grepl("Prevo", trial_label))
 
 # yield diffs, money-------------------------------------------------------------
 
@@ -127,7 +129,7 @@ d_fig |>
                 vjust = 0.75)) +
   #--savings values
   geom_text(aes(reorder(trial_label, -yld_dif_buac), 
-                y = 28, 
+                y = 18, 
                 hjust = 1,
                 label = value_mid_lab,
                 color = clr),
@@ -137,9 +139,9 @@ d_fig |>
   coord_flip() +
   my_yield_theme +
   scale_size_manual(values = c(0, 2)) +
-  scale_y_continuous(limits = c(-23, 40),
-                     breaks = c(-20, 0,
-                                20, 40)) +
+  scale_y_continuous(limits = c(-21, 20),
+                     breaks = c(-20, -10, 0, 10,
+                                20)) +
   scale_fill_manual(values = c(pfi_tan, pfi_green)) +
   scale_color_manual(values = c("neutral" = pfi_tan, 
                                 "good" = pfi_blue,
