@@ -4,6 +4,7 @@
 library(tidyverse)
 library(janitor)
 library(readxl)
+library(scales)
 
 rm(list = ls())
 
@@ -36,8 +37,9 @@ CleanData <- function(i = 2){
     select(x1, typical, reduced) %>% 
     pivot_longer(typical:reduced) %>% 
     mutate(value = as.numeric(value),
-           trial_label = tmp.key$trial_label) %>% 
-    select(trial_label, "cost_unit_n" = value) %>% 
+           trial_label = tmp.key$trial_label,
+           n_type = gsub(" .*$", "", x1)) %>% 
+    select(trial_label, n_type, "cost_unit_n" = value) %>% 
     filter(!is.na(cost_unit_n)) %>% 
     distinct() 
   
@@ -67,11 +69,12 @@ dat %>%
          trial_label = paste(trial_label, n),
          trial_label = fct_inorder(trial_label)) %>% 
   ggplot(aes(trial_label, cost_unit_n)) + 
-  geom_point() + 
+  geom_point(aes(color = n_type), size= 3) + 
   geom_hline(yintercept = 0.6, linetype = "dashed") +
   geom_hline(yintercept = 1.2, linetype = "dashed") +
   coord_flip() + 
   scale_y_continuous(labels = label_dollar()) + 
-  labs(title = "2022 prices ranged from $0.60-$1.20")
+  labs(title = "2022 prices ranged from $0.60-$1.20") + 
+  scale_color_viridis_d()
 
 ggsave("figs_scratch/scratch_nprices.png")
