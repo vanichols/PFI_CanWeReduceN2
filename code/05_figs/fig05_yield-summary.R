@@ -93,6 +93,33 @@ d_money_fig <-
                                   paste0("$", round(value_mid), "/ac")))
 
 
+
+#--put range of monetary outcomes
+d_money_fig2 <- 
+  d_money_raw %>%
+  rename(value_max = bestsav_dolac,
+         value_mid = midsav_dolac,
+         value_min = worstsav_dolac) %>%
+  mutate(clr = case_when(
+    (value_max < 0 & value_min < 0) ~ "bad",
+    (value_max > 0 & value_min < 0) ~ "neutral",
+    (value_max > 0 & value_min > 0) ~ "good"
+  )) %>% 
+  select(trial_label, clr, value_min, value_max) %>% 
+  #--create nice label
+  mutate(
+    value_min = ifelse(value_min < 0, 
+                       paste0("-$", abs(round(value_min))),
+                       paste0("$", abs(round(value_min)))),
+    value_max = ifelse(value_max < 0, 
+                       paste0("-$", abs(round(value_max)), "/ac"),
+                       paste0("$", abs(round(value_max)), "/ac")),
+    value_mid_lab = paste0(value_min, " to ", value_max)
+    
+  )
+
+    
+    
 #--combine money and yield info
 d_fig <- 
   y_dst |> 
@@ -100,6 +127,16 @@ d_fig <-
   select(trial_label, yld_dif_buac, yld_sig) |> 
   distinct() |> 
   left_join(d_money_fig)
+
+
+#--combine money and yield info
+d_fig2 <- 
+  y_dst |> 
+  mutate(yld_sig = ifelse(yld_pval < 0.05, "*", " ")) %>% 
+  select(trial_label, yld_dif_buac, yld_sig) |> 
+  distinct() |> 
+  left_join(d_money_fig2)
+
 
 d_fig %>% 
   filter(grepl("Prevo", trial_label))
@@ -115,7 +152,7 @@ d_fig |>
   left_join(d_diffs %>% select(trial_label, dif_nrate_lbac) %>% distinct()) %>% 
   #--make it so it is red-typ and nice labels
   mutate(yld_dif_buac = -yld_dif_buac,
-         trial_label = paste0(trial_label, ", -", round(dif_nrate_lbac), " lb/ac")) %>% 
+         trial_label = paste0(trial_label, ", -", round(dif_nrate_lbac), " lb N/ac")) %>% 
   #--fig
   ggplot(aes(reorder(trial_label, -yld_dif_buac), yld_dif_buac)) +
   geom_col(aes(fill = yld_sig),
@@ -153,4 +190,52 @@ d_fig |>
        caption = "* = Significant change in yield at 95% confidence level")
 
 ggsave("figs/fig05_yields.jpg", width = 7, height = 5)
+
+
+
+# range of financial outcomes ---------------------------------------------
+
+d_fig2 |>
+  left_join(d_diffs %>% select(trial_label, dif_nrate_lbac) %>% distinct()) %>% 
+  #--make it so it is red-typ and nice labels
+  mutate(yld_dif_buac = -yld_dif_buac,
+         trial_label = paste0(trial_label, ", -", round(dif_nrate_lbac), " lb N/ac")) %>% 
+  #--fig
+  ggplot(aes(reorder(trial_label, -yld_dif_buac), yld_dif_buac)) +
+  geom_col(aes(fill = yld_sig),
+           #size = yld_sig),
+           color = "black",
+           show.legend = F) +
+  geom_text(aes(reorder(trial_label, -yld_dif_buac), 
+                ifelse(yld_dif_buac < 0, yld_dif_buac - 2, yld_dif_buac + 2), 
+                label = yld_sig,
+                hjust = 0,
+                vjust = 0.75)) +
+  #--savings values
+  geom_text(aes(reorder(trial_label, -yld_dif_buac), 
+                y = 19, 
+                hjust = 0.5,
+                label = value_mid_lab,
+                color = clr),
+            angle = 0,
+            show.legend = F,
+            fontface = "bold") +
+  coord_flip() +
+  my_yield_theme +
+  scale_size_manual(values = c(0, 2)) +
+  scale_y_continuous(limits = c(-21, 25),
+                     breaks = c(-20, -10, 0, 10,
+                                20)) +
+  scale_fill_manual(values = c(pfi_tan, pfi_green)) +
+  scale_color_manual(values = c("neutral" = pfi_tan, 
+                                "good" = pfi_blue,
+                                "bad" = pfi_orange)) +
+  labs(x = NULL,
+       y = "Impact of reduced N rate on corn yield (bu/ac)\nrelative to typical N treatment",
+       title = "Yield reductions are not indicative of financial outcomes",
+       subtitle = "Financial outcome from reduced N rate assuming midpoint price scenario as reference on right",
+       caption = "* = Significant change in yield at 95% confidence level")
+
+#ggsave("figs/fig05_yields.jpg", width = 7, height = 5)
+
 

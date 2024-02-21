@@ -75,7 +75,7 @@ d_money_fig <-
   mutate(#value_min = value_min / dif_nrate_lbac,
          #value_max = value_max/dif_nrate_lbac,
          #value_mid = value_mid/dif_nrate_lbac,
-         trial_label = paste0(trial_label, ", -", round(dif_nrate_lbac), " lb/ac")) 
+         trial_label = paste0(trial_label, ", -", round(dif_nrate_lbac), " lb N/ac")) 
 
 
 #--NOTE: you will need to change the x scale to match the best for the figure
