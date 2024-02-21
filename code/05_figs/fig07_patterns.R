@@ -60,7 +60,9 @@ dat <-
 dat %>% 
   mutate(sig = ifelse(pval < 0.05, "sig", "ns")) %>% 
   ggplot(aes(nrate_lbac, diff_est)) + 
-  geom_point(aes(color = sig))
+  geom_point(aes(color = sig), size = 5) +
+  labs(x = "initial N rate",
+       y = "Diff in yields")
 
 ghg_tot_lab <- 
   ghg %>% 

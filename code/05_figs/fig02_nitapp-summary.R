@@ -58,9 +58,14 @@ d_nredp <-
   mutate(red_pct = (typ - red)/typ * 100,
          red_abs = typ - red)
 
-red_pct <- round(mean(d_nredp$red_pct), 0)
+red_pct_min <- round(min(d_nredp$red_pct), 0)
+red_pct_mean <- round(mean(d_nredp$red_pct), 0)
+red_pct_max <- round(max(d_nredp$red_pct), 0)
+
 red_abs_min <- round(min(d_nredp$red_abs), 0)
+red_abs_mean <- round(mean(d_nredp$red_abs), 0)
 red_abs_max <- round(max(d_nredp$red_abs), 0)
+
 abs_min <- round(min(d_nredp$typ), 0)
 abs_max <- round(max(d_nredp$typ), 0)
 
@@ -127,12 +132,15 @@ fig_dat %>%
   labs(x = "Farmer",
        y = "Nitrogen\napplied\n(lb/ac)",
        fill = NULL,
-       title = paste0("Typical N rates ranged from ", abs_min, "-", abs_max, " lb N/ac"),
-       subtitle = paste0("On average, rates were reduced by ", red_pct, "% (", red_abs_min, "-",
-                         red_abs_max, " lb N/ac lower than typical rate)")) + 
+       title = paste0("Typical N rates ranged from ", abs_min, "-",
+                      abs_max, " lb N/ac"),
+       subtitle = paste0("On average, rates were reduced by ", red_pct_mean, "%*"),
+       caption = paste0("*Reductions ranged from ",
+                        red_abs_min,"-", red_abs_max, " lb N/ac, with a mean of ",
+                        red_abs_mean, " lb N/ac")) + 
   my_nitapp_theme 
 
 ggsave("figs/fig02_nrates.jpg", width = 8.1, height = 5.6)
 
 
-
+19/22

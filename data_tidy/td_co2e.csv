@@ -1,23 +1,89 @@
-trial_key,co2e_kgha,co2e_lbac,FTMco2e_lbac
-abel_23,262.9912649341671,234.63528574579632,342.05143957827084
-amun1_23,341.8886444144172,305.02587146953516,444.66687145175206
-amun2_23,341.8886444144172,305.02587146953516,444.66687145175206
-ande_23,435.6888622409367,388.7124567188692,566.6652182346686
-auke_23,455.85152588588954,406.7011619593802,592.8891619356693
-bake1_23,175.32750995611138,156.42352383053088,228.03429305218057
-bake2_23,175.32750995611138,156.42352383053088,228.03429305218057
-benn_23,368.18777090783396,328.48940004411486,478.87201540957915
-borc_23,262.9912649341671,234.63528574579632,342.05143957827084
-boye_23,438.3187748902784,391.0588095763272,570.0857326304514
-brag_23,372.57095865673665,332.399988139878,484.57287273588355
-deng_23,175.32750995611138,156.42352383053088,228.03429305218057
-harv_23,324.3558934188061,289.3835190864821,421.863442146534
-hiem_23,368.18777090783396,328.48940004411486,478.87201540957915
-holli_23,350.65501991222277,312.84704766106177,456.06858610436115
-krue_23,219.1593874451392,195.5294047881636,285.0428663152257
-mcca1_23,438.3187748902784,391.0588095763272,570.0857326304514
-mcca2_23,438.3187748902784,391.0588095763272,570.0857326304514
-pete_23,438.3187748902784,391.0588095763272,570.0857326304514
-prev_23,464.6179013836952,414.5223381509068,604.2908765882785
-vanh_23,525.9825298683342,469.27057149159265,684.1028791565417
-veen_23,175.32750995611138,156.42352383053088,228.03429305218057
+trial_key,desc,co2e_lbac
+abel_23,avoided fert manu ghg emissions,120.27991431722488
+abel_23,"avoided n20 emissions, ind-vol",7.024285714285713
+abel_23,"avoided n2o emissions, direct",70.24285714285715
+abel_23,"avoided n2o emissions, ind-leach",37.08822857142856
+amun1_23,avoided fert manu ghg emissions,156.36388861239234
+amun1_23,"avoided n20 emissions, ind-vol",9.131571428571428
+amun1_23,"avoided n2o emissions, direct",91.31571428571428
+amun1_23,"avoided n2o emissions, ind-leach",48.21469714285713
+amun2_23,avoided fert manu ghg emissions,156.36388861239234
+amun2_23,"avoided n20 emissions, ind-vol",9.131571428571428
+amun2_23,"avoided n2o emissions, direct",91.31571428571428
+amun2_23,"avoided n2o emissions, ind-leach",48.21469714285713
+ande_23,avoided fert manu ghg emissions,199.2637247188692
+ande_23,"avoided n20 emissions, ind-vol",11.636899999999997
+ande_23,"avoided n2o emissions, direct",116.36899999999999
+ande_23,"avoided n2o emissions, ind-leach",61.44283199999999
+auke_23,avoided fert manu ghg emissions,208.48518481652312
+auke_23,"avoided n20 emissions, ind-vol",12.175428571428572
+auke_23,"avoided n2o emissions, direct",121.75428571428571
+auke_23,"avoided n2o emissions, ind-leach",64.28626285714283
+bake1_23,avoided fert manu ghg emissions,80.18660954481658
+bake1_23,"avoided n20 emissions, ind-vol",4.682857142857143
+bake1_23,"avoided n2o emissions, direct",46.828571428571436
+bake1_23,"avoided n2o emissions, ind-leach",24.72548571428571
+bake2_23,avoided fert manu ghg emissions,80.18660954481658
+bake2_23,"avoided n20 emissions, ind-vol",4.682857142857143
+bake2_23,"avoided n2o emissions, direct",46.828571428571436
+bake2_23,"avoided n2o emissions, ind-leach",24.72548571428571
+benn_23,avoided fert manu ghg emissions,168.39188004411486
+benn_23,"avoided n20 emissions, ind-vol",9.834000000000001
+benn_23,"avoided n2o emissions, direct",98.34
+benn_23,"avoided n2o emissions, ind-leach",51.92352
+borc_23,avoided fert manu ghg emissions,120.27991431722488
+borc_23,"avoided n20 emissions, ind-vol",7.024285714285713
+borc_23,"avoided n2o emissions, direct",70.24285714285715
+borc_23,"avoided n2o emissions, ind-leach",37.08822857142856
+boye_23,avoided fert manu ghg emissions,200.46652386204144
+boye_23,"avoided n20 emissions, ind-vol",11.707142857142857
+boye_23,"avoided n2o emissions, direct",117.0714285714286
+boye_23,"avoided n2o emissions, ind-leach",61.813714285714276
+brag_23,avoided fert manu ghg emissions,170.39654528273522
+brag_23,"avoided n20 emissions, ind-vol",9.951071428571426
+brag_23,"avoided n2o emissions, direct",99.51071428571429
+brag_23,"avoided n2o emissions, ind-leach",52.54165714285713
+deng_23,avoided fert manu ghg emissions,80.18660954481658
+deng_23,"avoided n20 emissions, ind-vol",4.682857142857143
+deng_23,"avoided n2o emissions, direct",46.828571428571436
+deng_23,"avoided n2o emissions, ind-leach",24.72548571428571
+harv_23,avoided fert manu ghg emissions,148.3452276579107
+harv_23,"avoided n20 emissions, ind-vol",8.663285714285717
+harv_23,"avoided n2o emissions, direct",86.63285714285716
+harv_23,"avoided n2o emissions, ind-leach",45.74214857142858
+hiem_23,avoided fert manu ghg emissions,168.39188004411486
+hiem_23,"avoided n20 emissions, ind-vol",9.834000000000001
+hiem_23,"avoided n2o emissions, direct",98.34
+hiem_23,"avoided n2o emissions, ind-leach",51.92352
+holli_23,avoided fert manu ghg emissions,160.37321908963315
+holli_23,"avoided n20 emissions, ind-vol",9.365714285714287
+holli_23,"avoided n2o emissions, direct",93.65714285714289
+holli_23,"avoided n2o emissions, ind-leach",49.45097142857142
+krue_23,avoided fert manu ghg emissions,100.23326193102072
+krue_23,"avoided n20 emissions, ind-vol",5.853571428571429
+krue_23,"avoided n2o emissions, direct",58.5357142857143
+krue_23,"avoided n2o emissions, ind-leach",30.906857142857138
+mcca1_23,avoided fert manu ghg emissions,200.46652386204144
+mcca1_23,"avoided n20 emissions, ind-vol",11.707142857142857
+mcca1_23,"avoided n2o emissions, direct",117.0714285714286
+mcca1_23,"avoided n2o emissions, ind-leach",61.813714285714276
+mcca2_23,avoided fert manu ghg emissions,200.46652386204144
+mcca2_23,"avoided n20 emissions, ind-vol",11.707142857142857
+mcca2_23,"avoided n2o emissions, direct",117.0714285714286
+mcca2_23,"avoided n2o emissions, ind-leach",61.813714285714276
+pete_23,avoided fert manu ghg emissions,200.46652386204144
+pete_23,"avoided n20 emissions, ind-vol",11.707142857142857
+pete_23,"avoided n2o emissions, direct",117.0714285714286
+pete_23,"avoided n2o emissions, ind-leach",61.813714285714276
+prev_23,avoided fert manu ghg emissions,212.49451529376395
+prev_23,"avoided n20 emissions, ind-vol",12.40957142857143
+prev_23,"avoided n2o emissions, direct",124.0957142857143
+prev_23,"avoided n2o emissions, ind-leach",65.52253714285715
+vanh_23,avoided fert manu ghg emissions,240.55982863444976
+vanh_23,"avoided n20 emissions, ind-vol",14.04857142857143
+vanh_23,"avoided n2o emissions, direct",140.4857142857143
+vanh_23,"avoided n2o emissions, ind-leach",74.17645714285712
+veen_23,avoided fert manu ghg emissions,80.18660954481658
+veen_23,"avoided n20 emissions, ind-vol",4.682857142857143
+veen_23,"avoided n2o emissions, direct",46.828571428571436
+veen_23,"avoided n2o emissions, ind-leach",24.72548571428571

@@ -24,11 +24,6 @@ y <-
 d <- 
   crossing(e, fert_type = n %>% pull(fert_type)) %>%  
   bind_rows(n) 
-
-d %>% 
-  write_csv("data_tidy/td_ghg.csv")
-
-
 d %>% 
   group_by(trial_key, fert_type) %>% 
   summarise(co2e_kgha = sum(co2e_kgha)) %>%
@@ -39,30 +34,24 @@ d %>%
 
 #--the type of fertilizer assumed isn't that big of a deal. just take an average
 
-d_avg <- 
-  d %>% 
-  group_by(trial_key, fert_type) %>% 
-  summarise(co2e_kgha = sum(co2e_kgha)) %>%
-  group_by(trial_key) %>% 
-  summarise(co2e_kgha = mean(co2e_kgha)) %>% 
-  mutate(co2e_lbac = co2e_kgha * ha_per_ac * lb_per_kg)
 
-d_avg %>% 
-  mutate(FTMco2e_lbac = co2e_lbac/7.82*11.4) %>% 
+res <- 
+  d  %>% 
+  group_by(trial_key, desc) %>% 
+  summarise(co2e_kgha = mean(co2e_kgha, na.rm = T)) %>% 
+  mutate(co2e_lbac = co2e_kgha * ha_per_ac * lb_per_kg) 
+
+res %>% 
+  select(-co2e_kgha) %>% 
   write_csv("data_tidy/td_co2e.csv")
 
-#--multiply the lbac by 8.7 to get kg co2e/ha, by 7.82 to get lb co2e/ac. 
-#--FTM does 11.4 near Ames IA, 8.06 near Eau Claire WI
-#--stefan probably wants lb/ac
-d_avg %>% 
+res
+#--multiply the lbac by 7.82 to get lb co2e/ac. 
+#--FTM does 11.4 near Ames IA, 8.06 near Eau Claire WI, N2Os are different dep on soils
+
+res %>% 
+  group_by(trial_key) %>% 
+  summarise(co2e_lbac = sum(co2e_lbac)) %>% 
   left_join(y) %>% 
   mutate(mf = co2e_lbac/dif_nrate_lbac)
 
-d_avg %>% 
-  mutate(year = 2023,
-         cumco2e_lbac = cumsum(co2e_lbac),
-         trial_key = fct_inorder(trial_key)) %>% 
-  ggplot(aes(trial_key, cumco2e_lbac)) + 
-  geom_point() +
-  scale_y_continuous(labels = label_comma()) +
-  labs(y = "Cumulative pounds of CO2e avoided per ha")
