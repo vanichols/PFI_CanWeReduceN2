@@ -126,6 +126,11 @@ dat <-
 dat %>% 
   write_csv("data_tidy/td_prices.csv")
 
+
+
+# viz ---------------------------------------------------------------------
+
+
 dat %>% 
   ggplot(aes(adj_n_type)) + 
   geom_histogram(stat = "count")

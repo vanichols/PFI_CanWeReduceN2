@@ -41,6 +41,8 @@ theme_border <-
 
 # general data --------------------------------------------------------------------
  
+one_car_lbsco2 <- 10141.3
+
 tk <- 
   read_csv("data_tidy/td_trialkey.csv") %>% 
   select(trial_key, trial_label) 
@@ -51,9 +53,10 @@ d_diffs <-
 
 d_ghg <- 
   read_csv("data_tidy/td_co2e.csv") %>% 
-  select(-co2e_kgha) %>% 
+  group_by(trial_key) %>% 
+  summarise(co2e_lbac = sum(co2e_lbac)) %>% 
   mutate(co2e_lbac = round(co2e_lbac, 0),
-         FTMco2e_lbac = round(FTMco2e_lbac, 0))
+         acres_needed = round(one_car_lbsco2/co2e_lbac, 0))
 
 # yields ------------------------------------------------------------------
 
@@ -109,7 +112,7 @@ y3 <-
              (pval < 0.05) ~ paste("Significant", dir, "of", abs(round(diff_est, 0)), "bu/ac"),
              (pval > 0.05) ~ "No statistical difference in yields")) %>% 
   left_join(d_ghg) %>% 
-  mutate(co2lab = paste("GHG emissions reduced by", FTMco2e_lbac, "lb CO2e per acre"))
+  mutate(co2lab = paste("One car's GHG offset by", acres_needed, "acres of reduced N"))
 
 # money -------------------------------------------------------------------
 
@@ -239,11 +242,12 @@ YieldFig <- function(y.data = y.tst) {
   
 }
 
+
 # tst <- y |>
 #    filter(trial_label == my_names[7])
 # 
-# fig1 <- YieldFig(y.data = tst)
-# 
+# fig1 <- YieldFig(y.data = y.tst)
+# # 
 # fig1
 
 m.tst <- m %>% filter(trial_label == "Aukes")

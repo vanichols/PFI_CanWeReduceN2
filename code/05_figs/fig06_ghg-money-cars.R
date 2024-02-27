@@ -112,7 +112,8 @@ fig1 <-
                    color = "gray",
                    max.overlaps = 22, show.legend = F,
                    box.padding = 0.5) + 
-  labs(title = str_wrap("Sixteen out of 22 trials saved money and reduced GHG emissions with reduced N rates", width = 50),
+  labs(subtitle = "Seventy-three percent of trials also saved money",
+       title = "All N reductions avoided GHGs",
        x = "Pounds of CO2e avoided per acre",
        y = "Savings\n($/ac)") + 
   scale_fill_manual(values = c(pfi_orange, pfi_blue)) + 
@@ -121,15 +122,6 @@ fig1 <-
   my_ghg_theme1
 
 fig1
-
-#ggsave("figs/fig06_ghg-money.jpg", width = 8, height = 5)
-
-ghg %>%
-  select(trial_label, trt, co2e_lbbu) %>% 
-  pivot_wider(names_from = trt, values_from = co2e_lbbu) %>% 
-  mutate(red_pct = (typ - red)/typ) %>% 
-  summarise(red_pct = mean(red_pct))
-
 
 # bar chart 2 -------------------------------------------------------------
 
@@ -178,11 +170,28 @@ ghg2 <-
          acres_needed_per_car = one_car_lbsco2/red_co2_ac,
          trial_label = paste0(trial_label, ", -", round(dif_nrate_lbac), " lb N/ac")) %>% 
   left_join(st2) %>% 
+  distinct() %>% 
+  left_join(ghg1 %>% select(trial_key, midsav_dolac)) %>% 
+  mutate(mon = ifelse(midsav_dolac < 0, "Lost money", "Saved money")) %>% 
   distinct()
 
 
 
 # fig ---------------------------------------------------------------------
+
+tot_num <- 
+  ghg2 %>% 
+  nrow() %>% 
+  as.numeric()
+
+saved_mon <- 
+  ghg2 %>% 
+  filter(midsav_dolac > 0) %>% 
+  nrow() %>% 
+  as.numeric()
+
+saved_pct <- 
+  round(saved_mon/tot_num * 100)
 
 cars_min <- min(ghg2$acres_needed_per_car) %>% round()
 cars_max <- max(ghg2$acres_needed_per_car) %>% round()
@@ -196,21 +205,26 @@ fig2 <-
   arrange(acres_needed_per_car) %>% 
   mutate(trial_label = fct_inorder(trial_label)) %>% 
   ggplot(aes(trial_label, acres_needed_per_car)) + 
-  geom_col(color = "black", aes(fill = sig)) +
-  scale_fill_manual(values = c("sig" = pfi_orange, "ns" = pfi_blue)) +
+  geom_col(color = "black", aes(fill = mon)) +
+  scale_fill_manual(values = c("Lost money" = pfi_orange, "Saved money" = pfi_blue)) +
   coord_flip() +
   labs(
-    title = paste0("On average*, reducing N on ", cars_mean, " acres would offset one vehicle's GHG emissions"),
-    subtitle = "Reduced N on 26 million acres would offset 1 million of the USA's 300 million cars",
+    subtitle = paste0("Acres needed ranged from ", cars_min, "-", cars_max),
+    title = "Bigger N reductions require less acreage to offset one vehicle",
+    #subtitle = paste0("Using average financial outcomes, ", saved_pct, "% of producers saved money and reduced emissions"),
     x = NULL,
     y = "Acres of reduced N needed to offset one car",
-    fill = "N rate reduction",
-    caption = paste0("*Assumes the average reduction from this set of trials (39 lb N/ac)"))  +
-  my_ghg_theme2
+    fill = "Average financial outcome") +
+  my_ghg_theme2 +
+  theme(legend.position = c(0.8, 0.2),
+        legend.background = element_rect(fill = 'transparent', color = 'transparent'))
 
-#ggsave("figs/fig07_ghg-cars.jpg", width = 6.5, height = 5)
+
+fig2
 
 
 # patchwork ---------------------------------------------------------------
 
 fig1 + fig2
+
+ggsave("figs/fig06_ghg-money-cars.jpg", width = 10, height = 5)
