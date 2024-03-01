@@ -61,7 +61,8 @@ for (j in 1:nrow(coops)){
 
 # N prices ----------------------------------------------------------------
 
-#--note: Peterson did not report a price for his adjusted side-dressing
+#--2/21 note: Peterson did not report a price for his adjusted side-dressing?
+#--this was addressed, Stefan sent updated version 2/24
 
 GetNPrices <- function(i = 1){
   
@@ -114,8 +115,6 @@ for (j in 1:nrow(coops)){
   
 }
 
-
-coops %>% left_join(dat.n) ->a
 
 # combine data ------------------------------------------------------------
 

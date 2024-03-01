@@ -216,7 +216,7 @@ fig2 <-
     y = "Acres of reduced N needed to offset one car",
     fill = "Average financial outcome") +
   my_ghg_theme2 +
-  theme(legend.position = c(0.8, 0.2),
+  theme(legend.position = c(0.75, 0.2),
         legend.background = element_rect(fill = 'transparent', color = 'transparent'))
 
 
