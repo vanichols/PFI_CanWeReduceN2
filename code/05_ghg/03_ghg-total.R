@@ -8,7 +8,7 @@ library(scales)
 
 rm(list = ls())
 
-source("code/06_GHG/fxn_conversions.R")
+source("code/05_ghg/fxn_conversions.R")
 
 # data --------------------------------------------------------------------
 
@@ -24,6 +24,7 @@ y <-
 d <- 
   crossing(e, fert_type = n %>% pull(fert_type)) %>%  
   bind_rows(n) 
+
 d %>% 
   group_by(trial_key, fert_type) %>% 
   summarise(co2e_kgha = sum(co2e_kgha)) %>%
@@ -32,8 +33,14 @@ d %>%
   geom_point(aes(color = fert_type)) + 
   geom_line(aes(color = fert_type))
 
-#--the type of fertilizer assumed isn't that big of a deal. just take an average
+d %>% 
+  group_by(trial_key, fert_type) %>% 
+  summarise(co2e_kgha = sum(co2e_kgha)) %>%
+  left_join(y, relationship = "many-to-many") 
+  
+  3/300
 
+#--the type of fertilizer assumed isn't that big of a deal. just take an average
 
 res <- 
   d  %>% 

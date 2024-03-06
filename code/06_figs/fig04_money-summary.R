@@ -11,7 +11,7 @@ library(ggarchery)
 
 rm(list = ls())
 
-source("code/05_figs/00_fig-colors.R")
+source("code/06_figs/00_fig-colors.R")
 
 # theme -------------------------------------------------------------------
 
@@ -44,6 +44,10 @@ d_money_raw <-
   left_join(tk) %>% 
   select(trial_key, trial_label, everything())
   
+
+d_money_raw %>% 
+  filter(grepl("Prevo", trial_label))
+
 #--nrate and yield diffs by rep
 d_diffs <- 
   read_csv("data_tidy/td_trtdiffs.csv") %>% 
@@ -97,6 +101,9 @@ nu_loss <-
          filter(clr == "bad"))
 
 nu_loss_ch <- as.character(english(nu_loss)) %>% str_to_sentence()
+
+d_money_fig %>% 
+  arrange(value_min)
 
 d_money_fig %>% 
   ggplot() + 

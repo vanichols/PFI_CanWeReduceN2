@@ -212,7 +212,8 @@ CumPrecipFigSummary <- function(f.data = cp) {
               family = "Times New Roman",
               fontface = "italic") +
     scale_x_date(date_breaks = "1 month", 
-                 date_labels = "%b") +
+                 date_labels = "%b",
+                 limits = as.Date(c('2023-01-01','2023-12-01'))) +
     scale_y_continuous(limits = c(-15, 15), breaks = c(-15, -10, -5, 0, 5, 10, 15)) +
     labs(x = NULL,
          y = "Cumulative precipitation,\ndeviation from average (inches)") + 

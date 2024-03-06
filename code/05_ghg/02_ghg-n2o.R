@@ -7,7 +7,7 @@ library(readxl)
 
 rm(list = ls())
 
-source("code/06_GHG/fxn_conversions.R")
+source("code/05_ghg/fxn_conversions.R")
 
 navoided <- 
   read_csv("data_tidy/td_trtdiffs.csv") %>% 
@@ -18,25 +18,25 @@ navoided <-
 
 #--co2 released per unit fuel used
 r_fuelghg <- 
-  read_csv("code/06_GHG/ref_fuel_ghg.csv") |> 
+  read_csv("data_references/ref_fuel_ghg.csv") |> 
   mutate_if(is.character, str_to_lower) 
 
 #--energy contents
 r_fuele <- 
-  read_csv("code/06_GHG/ref_fuel-energy.csv") 
+  read_csv("data_references/ref_fuel-energy.csv") 
 
 #--ghg gwp for each time horizon
 r_ghg <- 
-  read_excel("code/06_GHG/refbyhand_gwp.xlsx", skip = 5) 
+  read_excel("data_references/refbyhand_gwp.xlsx", skip = 5) 
 
 #--fert categories (urea, ammonium, etc)
 r_fertcat <- 
-  read_csv("code/06_GHG/refbyhand_fert-category.csv", skip = 5) |> 
+  read_csv("data_references/refbyhand_fert-category.csv", skip = 5) |> 
   select(-notes)
 
 #--amount of n in each type of fertilizer
 r_fertn <- 
-  read_csv("code/06_GHG/ref_fert-n-contents.csv") |> 
+  read_csv("data_references/ref_fert-n-contents.csv") |> 
   rename(desc = fert_type) |> 
   mutate(kgn_kgfert = value) |> 
   select(desc, kgn_kgfert)
@@ -44,7 +44,7 @@ r_fertn <-
 
 # assumptions -------------------------------------------------------------
 
-r_ass <- read_excel("code/06_GHG/refbyhand_assumptions.xlsx", skip = 5)
+r_ass <- read_excel("data_references/refbyhand_assumptions.xlsx", skip = 5)
 
 #--timespan for ghg emissions
 a_timeframe <- r_ass %>% filter(desc == "timespan") %>% pull(value)

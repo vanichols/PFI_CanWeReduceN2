@@ -10,8 +10,8 @@ library(lubridate)
 library(patchwork)
 
 rm(list = ls())
-source("code/05_figs/00_weather-figs-fxns.R")
-source("code/05_figs/00_fig-colors.R")
+source("code/06_figs/00_weather-figs-fxns.R")
+source("code/06_figs/00_fig-colors.R")
 
 
 # border for patchwork plot -----------------------------------------------
@@ -76,7 +76,7 @@ nu_trials <-
 fig_t + fig_cp + 
   plot_annotation(
     theme = theme_border,
-    title = str_wrap("Weather deviations from historical averages", width = 80), 
+    title = str_wrap("2023 weather deviations from historical averages", width = 80), 
     subtitle = str_wrap(paste0("Warm springs, dry finish to growing seasons at all ", 
                                nu_trials, " trials"), width = 80))
 

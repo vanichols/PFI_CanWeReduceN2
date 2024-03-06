@@ -6,7 +6,7 @@ library(ggarchery)
 
 rm(list = ls())
 
-source("code/05_figs/00_fig-colors.R")
+source("code/06_figs/00_fig-colors.R")
 
 # theme -------------------------------------------------------------------
 

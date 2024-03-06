@@ -7,7 +7,7 @@ library(ggrepel)
 
 rm(list = ls())
 
-source("code/05_figs/00_fig-colors.R")
+source("code/06_figs/00_fig-colors.R")
 
 # theme -------------------------------------------------------------------
 
@@ -80,7 +80,11 @@ my_ord1 <-
   arrange(-maxco2) %>% 
   pull(trial_label) %>% 
   unique()
-  
+
+ghg1 %>% 
+  pull(co2e_lbac) %>% 
+  summary()
+
 #--what percentage was this reduced?
 ghg1 %>%
   select(trial_label, trt, co2e_lbbu) %>% 
@@ -112,8 +116,9 @@ fig1 <-
                    color = "gray",
                    max.overlaps = 22, show.legend = F,
                    box.padding = 0.5) + 
-  labs(subtitle = "Seventy-three percent of trials also saved money",
-       title = "All N reductions avoided GHGs",
+  labs(subtitle = "Seventy-three percent of trials also potentially saved money*",
+       caption = "*At mid-point (average) price scenario",
+       title = "All N reductions avoided GHG emissions",
        x = "Pounds of CO2e avoided per acre",
        y = "Savings\n($/ac)") + 
   scale_fill_manual(values = c(pfi_orange, pfi_blue)) + 
@@ -126,7 +131,7 @@ fig1
 # bar chart 2 -------------------------------------------------------------
 
 one_car_lbsco2 <- 10141.3
-one_lbN_lbsco2 <- 11.1 #--from IPCC/GREET
+one_lbN_lbsco2 <- 7.82 #--from IPCC/GREET
 
 # theme2 -------------------------------------------------------------------
 
@@ -200,6 +205,9 @@ cars_mean <- mean(ghg2$acres_needed_per_car) %>% round()
 ghg2 %>% 
   summarise(mn = mean(dif_nrate_lbac))
 
+ghg2 %>% 
+  filter(trial_key == "pete_23")
+
 fig2 <- 
   ghg2 %>%
   arrange(acres_needed_per_car) %>% 
@@ -209,11 +217,12 @@ fig2 <-
   scale_fill_manual(values = c("Lost money" = pfi_orange, "Saved money" = pfi_blue)) +
   coord_flip() +
   labs(
-    subtitle = paste0("Acres needed ranged from ", cars_min, "-", cars_max),
+    subtitle = paste0("Acres needed ranged from ", cars_min, "-", cars_max, "**"),
     title = "Bigger N reductions require less acreage to offset one vehicle",
     #subtitle = paste0("Using average financial outcomes, ", saved_pct, "% of producers saved money and reduced emissions"),
     x = NULL,
-    y = "Acres of reduced N needed to offset one car",
+    y = "Acres of reduced N needed to offset one vehicle",
+    caption = "**Assuming EPA estimates for average vehicle emissions",
     fill = "Average financial outcome") +
   my_ghg_theme2 +
   theme(legend.position = c(0.75, 0.2),
