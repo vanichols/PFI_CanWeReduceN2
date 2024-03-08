@@ -2,7 +2,7 @@
 #--these functions seem to be different compared to the 'wea fxn file'
 #--theme and weather files have Times New Roman
 #--modified from 2022 data on 1/16/2024
-#--boyer and amundson don't seem to be complete
+#--3/8/24 - updated titles
 
 library(tidyverse)
 library(scales)
@@ -76,7 +76,7 @@ nu_trials <-
 fig_t + fig_cp + 
   plot_annotation(
     theme = theme_border,
-    title = str_wrap("2023 weather deviations from historical averages", width = 80), 
+    title = str_wrap("2023 weather deviations from 30-year historical averages", width = 80), 
     subtitle = str_wrap(paste0("Warm springs, dry finish to growing seasons at all ", 
                                nu_trials, " trials"), width = 80))
 
