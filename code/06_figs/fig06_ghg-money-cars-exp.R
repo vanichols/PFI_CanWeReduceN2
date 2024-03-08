@@ -102,18 +102,14 @@ co2_smy <-
             max_co2 = max(co2e_lbac)) %>% 
   mutate_if(is.numeric, round, -1)
 
-# GHG --------------------------------------------------------
+# GHG FIG --------------------------------------------------------
 
 fig1 <- 
   ghg1 %>% 
   rename(value_max = bestsav_dolac,
          value_mid = midsav_dolac,
          value_min = worstsav_dolac) %>%
-  mutate(mon = case_when(
-    (value_max < 0 & value_min < 0) ~ "Loss",
-    (value_max > 0 & value_min < 0) ~ "Inconclusive",
-    (value_max > 0 & value_min > 0) ~ "Savings"
-  )) %>% 
+  mutate(mon = ifelse(value_mid > 0, "Savings", "Loss")) %>% 
   ggplot(aes(co2e_lbac, value_mid)) + 
   geom_hline(yintercept = 0) + 
   geom_point(size = 4) + 
@@ -127,10 +123,10 @@ fig1 <-
        title = paste0("Reduced N treatments avoided ", 
                      co2_smy$min_co2, "-", co2_smy$max_co2, " lb CO2e/ac"),
        x = "Avoided GHG emissions\n(lb CO2e/ac)",
-       y = "Savings\n($/ac)",
-    fill = "Potential financial outcome (see Figure 4)") + 
+       y = "Midpoint\nfinancial\noutcome\n($/ac)",
+    fill = "Midpoint financial outcome (see Figure 4)") + 
   scale_fill_manual(values = c("Loss" = pfi_orange, 
-                               "Inconclusive" = pfi_tan, 
+                               #"Inconclusive" = pfi_tan, 
                                "Savings" = pfi_blue)) + 
   scale_y_continuous(labels = label_dollar()) +
   my_ghg_theme1 
@@ -180,11 +176,7 @@ ghg2 <-
   rename(value_max = bestsav_dolac,
          value_mid = midsav_dolac,
          value_min = worstsav_dolac) %>%
-  mutate(mon = case_when(
-    (value_max < 0 & value_min < 0) ~ "Loss",
-    (value_max > 0 & value_min < 0) ~ "Inconclusive",
-    (value_max > 0 & value_min > 0) ~ "Savings"
-  ))
+  mutate(mon = ifelse(value_mid > 0, "Savings", "Loss"))
 
 
 #--should be 22
@@ -195,7 +187,7 @@ tot_num <-
 
 saved_mon <- 
   ghg2 %>% 
-  filter(mon != "bad") %>% 
+  filter(mon != "Loss") %>% 
   nrow() %>% 
   as.numeric()
 
@@ -231,7 +223,7 @@ fig2 <-
     x = NULL,
     y = "Acres of reduced N needed to offset one vehicle",
     caption = "*Assuming EPA estimates for average vehicle emissions",
-    fill = "Potential financial outcome (see Figure 4)") +
+    fill = "Midpoint financial outcome (see Figure 4)") +
   my_ghg_theme2 +
   theme(legend.position = c(0.75, 0.2),
         legend.background = element_rect(fill = 'transparent', color = 'transparent'))

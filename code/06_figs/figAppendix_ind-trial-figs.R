@@ -10,8 +10,8 @@ library(patchwork)
 
 rm(list = ls())
 
-source("code/05_figs/00_weather-figs-fxns.R")
-source("code/05_figs/00_fig-colors.R")
+source("code/06_figs/00_weather-figs-fxns.R")
+source("code/06_figs/00_fig-colors.R")
 
 
 # theme -------------------------------------------------------------------
@@ -51,6 +51,7 @@ d_diffs <-
   read_csv("data_tidy/td_trtdiffs.csv") %>% 
   left_join(tk)
 
+#--has acres needed
 d_ghg <- 
   read_csv("data_tidy/td_co2e.csv") %>% 
   group_by(trial_key) %>% 
@@ -99,7 +100,7 @@ y_diff <-
     diff_calc = round(Typical, 0) - round(Reduced, 0)) %>% 
   select(trial_key, diff_calc)
 
-#--using FTM values 
+#--using IPCC and GREET values for acres needed
 y3 <- 
   y2 %>% 
   select(-diff_est) %>% 
@@ -112,7 +113,7 @@ y3 <-
              (pval < 0.05) ~ paste("Significant", dir, "of", abs(round(diff_est, 0)), "bu/ac"),
              (pval > 0.05) ~ "No statistical difference in yields")) %>% 
   left_join(d_ghg) %>% 
-  mutate(co2lab = paste("One car's GHG offset by", acres_needed, "acres of reduced N"))
+  mutate(co2lab = paste("One car's GHGs offset by", acres_needed, "acres of reduced N"))
 
 # money -------------------------------------------------------------------
 
@@ -401,7 +402,7 @@ MoneyFig <- function(m.data = m.tst) {
         "Financial outcome",
         width = 40
       ),
-      caption = "N prices ranged from $0.60-$1.20/lb N\n Corn revenue ranged from $5.70-$7.48/bu"
+      caption = "N prices ranged from $0.31-$1.40/lb N\n Corn revenue ranged from $4.53-$5.50/bu"
     )
   
   
