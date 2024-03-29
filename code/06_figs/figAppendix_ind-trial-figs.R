@@ -441,7 +441,7 @@ name_letter_guide_no_doubles <-
 
 # non-double trials -------------------------------------------------------
 
-i <- 1
+i <- 8
 for (i in 1:nrow(name_letter_guide_no_doubles)){
 
   ref.tmp <- 

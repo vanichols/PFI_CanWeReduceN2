@@ -47,7 +47,10 @@ md <-
       trial_key == "mcca1_23" ~ "McCaw1",
       trial_key == "mcca2_23" ~ "McCaw2",
       TRUE ~ trial_label
-    ))
+    )) %>% 
+  #--dengler lives in urbandale, but farms in traer ia
+  mutate(city = ifelse(trial_key == "deng_23", "traer", city),
+         zipcode = ifelse(trial_key == "deng_23", 50675, zipcode))
 
 # add lat and lon ---------------------------------------------------------
 
